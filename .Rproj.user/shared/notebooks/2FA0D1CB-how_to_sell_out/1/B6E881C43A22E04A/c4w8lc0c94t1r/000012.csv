@@ -1,0 +1,7 @@
+"0","skips %>%"
+"0","  group_by(track_id_clean) %>%"
+"0","  summarise(plays = n(),"
+"0","            not_skipped = sum(not_skipped)) %>%"
+"0","  filter(plays >= 50) %>%"
+"0","  mutate(not_skipped_pct= not_skipped / plays)  %>%"
+"0","    arrange(desc(not_skipped_pct)) "

@@ -1,0 +1,27 @@
+{
+    "id": "67562555",
+    "path": "~/Code/spotify-skips/notebooks/how_to_sell_out.Rmd",
+    "project_path": "notebooks/how_to_sell_out.Rmd",
+    "type": "r_markdown",
+    "hash": "1831184844",
+    "contents": "",
+    "dirty": true,
+    "created": 1618364647326.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "tempName": "Untitled1",
+        "chunk_output_type": "inline",
+        "cursorPosition": "67,0",
+        "scrollLine": "56",
+        "last_setup_crc32": "3A22E04A5e507858"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1618422798,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1618439724783,
+    "read_only": false,
+    "read_only_alternatives": []
+}

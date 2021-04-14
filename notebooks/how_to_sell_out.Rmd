@@ -1,0 +1,91 @@
+---
+title: 
+subtitle: ""
+author: <a href=mailto:justin.elszasz@baltimorecity.gov>justin.elszasz@baltimorecity.gov</a>
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_notebook:
+    code_folding: hide
+    fig_height: 4
+    fig_width: 6
+    toc: yes
+    toc_depth: 2
+    toc_float: true
+editor_options: 
+  chunk_output_type: inline
+---
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+</style>
+
+```{css, echo=FALSE}
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
+h1, .h1  {
+    margin-top: 70px;
+}
+```
+
+<img src=`r "https://images.squarespace-cdn.com/content/5b32397bf79392af6b062048/1578532761811-Y6J7YANV433GI2O8YPXV/OPI_Logo.png?content-type=image%2Fpng"` width="200">
+
+```{r setup, include = FALSE, echo = FALSE, message = FALSE, cache = FALSE}
+knitr::opts_chunk$set(
+  echo = F,
+  warning = F,
+  message = F,
+  include = T,
+  cache = F,
+  fig.width = 6, 
+  fig.height = 4,
+  out.width = "100%", 
+  out.height = "100%"
+  )
+
+knitr::clean_cache(
+  clean = FALSE, 
+  path = knitr::opts_chunk$get("cache.path")
+  )
+```
+
+```{r load_packages}
+library(tidyverse)
+library(lubridate)
+library(sf)
+library(leaflet)
+library(ggiteam)
+library(kableExtra)
+library(htmltools)
+library(DT)
+```
+
+```{r}
+track_features <- read_csv("../data/data/track_features/tf_mini.csv")
+skips <- read_csv("../data/data/training_set/log_mini.csv")
+```
+
+```{r}
+full <- skips %>% left_join(track_features, by = c("track_id_clean" = "track_id"))
+```
+
+```{r}
+full %>%
+  group_by()
+```
+
+```{r}
+View(df)
+```
+
+```{r}
+
+```
+
+
+
+```{r}
+sessionInfo()
+```
+
