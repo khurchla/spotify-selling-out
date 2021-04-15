@@ -12,14 +12,14 @@
     "properties": {
         "expression": "skips",
         "caption": "skips",
-        "totalObservations": 167880,
-        "displayedObservations": 167880,
-        "variables": 21,
-        "cacheKey": "45A51213",
+        "totalObservations": "167880",
+        "displayedObservations": "167880",
+        "variables": "21",
+        "cacheKey": "1631B510",
         "object": "skips",
         "environment": "",
-        "contentUrl": "grid_resource/gridviewer.html?env=&obj=skips&cache_key=45A51213&max_cols=50",
-        "preview": 0
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=skips&cache_key=1631B510&max_cols=50",
+        "preview": "0"
     },
     "folds": "",
     "lastKnownWriteTime": 7743292922724532721,
