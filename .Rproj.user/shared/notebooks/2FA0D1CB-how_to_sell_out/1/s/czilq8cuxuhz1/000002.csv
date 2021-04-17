@@ -1,2 +1,0 @@
-"0","track_features <- read_csv(""../data/data/track_features/tf_mini.csv"")"
-"0","skips <- read_csv(""../data/data/training_set/log_mini.csv"")"

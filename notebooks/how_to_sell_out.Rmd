@@ -1,6 +1,6 @@
 ---
-title: 
-subtitle: ""
+title: "How to Sell Out for Popularity in Music"
+subtitle: "Data Driven Recommendations from Audio Features of Least Skipped Spotify Tracks"
 author: <a href=mailto:justin.elszasz@baltimorecity.gov>justin.elszasz@baltimorecity.gov</a>
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
@@ -32,6 +32,9 @@ h1, .h1  {
 <img src=`r "https://images.squarespace-cdn.com/content/5b32397bf79392af6b062048/1578532761811-Y6J7YANV433GI2O8YPXV/OPI_Logo.png?content-type=image%2Fpng"` width="200">
 
 ```{r setup, include = FALSE, echo = FALSE, message = FALSE, cache = FALSE}
+# Disable scientific notation in double numbers, because instrumentalness otherwise did not test plotting accurately (plotted at zero)
+options(scipen = 999)
+
 knitr::opts_chunk$set(
   echo = F,
   warning = F,
@@ -50,22 +53,36 @@ knitr::clean_cache(
   )
 ```
 
+```{r install Baltimore City ggiteam package}
+# package object 'ggiteam' is a color standard styling pckg for City of Balt. (see https://rdrr.io/github/city-of-baltimore/ggiteam/src/R/ggiteam.R)
+#install.packages("remotes")
+#remotes::install_github("city-of-baltimore/ggiteam")
+```
+
+
 ```{r load_packages}
 library(tidyverse)
 library(lubridate)
 library(sf)
 library(leaflet)
-library(ggiteam)
-library(kableExtra)
+#library(ggiteam)
+#library(package)
+#library(kableExtra)
 library(htmltools)
 library(DT)
+# Note quotes used in install of package below, becuase it otherwise would error and cannot be found and in RStudio packages list
+#install.packages("fmsb")
+library(fmsb)
+library(viridis)
+library(RColorBrewer)
+library(ggplot2)
 ```
 
 # Here is my first notebook
 
 ```{r}
-track_features <- read_csv("../data/data/track_features/tf_mini.csv")
-skips <- read_csv("../data/data/training_set/log_mini.csv")
+track_features <- read_csv("../data/raw/track_features/tf_mini.csv")
+skips <- read_csv("../data/raw/training_set/log_mini.csv")
 ```
 
 
@@ -90,19 +107,26 @@ track_plays_and_skips <- skips %>%
     not_skipped = sum(not_skipped)
   ) %>%
   filter(plays >= 50) %>%
-  mutate(not_skipped_pct= not_skipped / plays)
+  mutate(not_skipped_pct = not_skipped / plays)
 ```
 
-
-```{r}
+```{r join features to plays_skips}
 track_plays_skips_features <- track_plays_and_skips %>% 
   left_join(track_features, by = c("track_id_clean" = "track_id")) 
 ```
 
+```{r glimpse joined plays_skips to features table}
+glimpse(track_plays_skips_features)
+```
+
 ```{r}
-track_plays_skips_features %>%
+p <- track_plays_skips_features %>%
   ggplot(aes(x = energy, y = not_skipped_pct)) +
   geom_point()
+# Add an understandable plot title and clean axis labels
+p + ggtitle("Percentage of Times each Track was Skipped of its Times Played \n by Energy of Tracks") +
+  xlab("Energy") + ylab("Not Skipped %") +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 ```{r plot.width = 3, out.width= "100%"}
@@ -114,19 +138,180 @@ track_plays_skips_features %>%
     beat_strength,
     danceability,
     flatness,
-    instrumentalness
+    instrumentalness,
+    speechiness,
+    acousticness,
+    liveness
+    
+    
   ) %>%
   gather(key = metric_name, value = metric, -not_skipped_pct) %>%
   ggplot(aes(x = metric, y = not_skipped_pct)) +
   geom_point() +
-  facet_wrap(~metric_name)
+  facet_wrap(~metric_name) +
+# Add an understandable plot title and clean axis labels
+  ggtitle("Percentage of Times each Track was Skipped of its Times Played \n by Various Audio Metrics") +
+  xlab("metric") + ylab("Not Skipped %") +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
+
+
+**SHAPE OF TRACKS**
+
+We're going to look at most and least skipped tracks on a radial chart (aka a spider, web, polor or radar charts/graphs).
+Before we do so, it's important to note this graph type may make comparisons more difficult than linear styles in some situations, and you can read more about that here: https://www.data-to-viz.com/caveat/spider.html
+
+Our situation is already normalized where the axis of each audio metric is the same which lends itself to more easily understandable and visually accurate view, for example it will be read more logically and accurately than if your flatness scale was 0 to 1 but energy was 0 to 10, etc.
+
+```{r plot radar chart o most and least skipped by percentage}
+# The fmsb library is useful to build a basic radar chart
+# Very specific input format is required so first we need to revisit and reshape our data track_plays_skips_features
+# According to https://www.r-graph-gallery.com/142-basic-radar-chart.html: "Each row must be an entity. Each column is a quantitative variable. 
+# First 2 rows provide the min and the max that will be used for each variable."
+# Our project goal is to show our musician client how to "sell out" i.e. what kind of music to make to achieve the most plays with least skips, so we'll start with the tail of the dataset we've isolated,
+# since it already is sorted descending by skips, this will give us the last 10 rows which all were played more than 50 times but were skipped the least of the songs played that many times or more.
+
+tracks_least_skipped_features <- tail(track_plays_skips_features)
+tracks_least_skipped_features
+```
+
+*Radar Requirements Checklist*
+
+How far we are from what is required for a radar chart?
+
+1.) Each row must be an entity. 
+Each row represents a unique track (track_id_clean).
+
+2.) Each column is a quantitative variable.
+Currently, columns contain summarized aggregations of its plays/skips, and columns for other quantitative attributes like energy, dancability, etc. We need to remove or drop any columns that won't show in the graph, or are not quantitative.
+
+```{r check data types of variable columns}
+# Let's check data types.
+glimpse(tracks_least_skipped_features)
+```
+2.) Non-quantitative or columns unnecessary for this chart will be removed:
+
+  $ not_skipped_pct _We're sorting by this descending, and there's no real use in visualizing it since our goal is to visualize the attributes of audio that makes it popular, i.e. not skipped frequently._
+  $ track_id_clean _It seems according to instructions this is no longer needed; row represent an entity but id is unnecessary for chart (since songs are anonymized it really doesn't matter here.)_
+  $ plays _(We're already representing this by descending order of the percentage, which will also order our separate charts dispayed)._
+  $ skip_1 (and 2,3) _(for our purposes, we'll simplify to only analyze skipped or not skipped, as normalized by the percentage aggregation)_
+  $ not_skipped _(redundant; same reasons as above)_
+  $ duration _let's try it first, scale is vastly different than other columns and may be confusing--we'll need to explicitly label each axis to try)_
+  $ release_year _ditto duration; I think this will be better as a caption/detail attribute, but we can try first._
+  $ us_popularity_estimate _ditto duration; this in other published models has shown to be the most indicative of success (least skips), but the scale is very large so we may have trouble with that._
+  $ mode _character type: major, minor. Move to a caption label or ignore._
+  $ acoustic_vector_0 (and 1-7) _Remove for separate plotting; we'll assign a new variable table for this analysis so we can easily return to work with these separately._
+  $ dyn_range_mean _removed as redundant and rolled up into energy; also has a very distinct 0 to 35 scale range different from other features._
+  
+  Everything else is a double type and we'll try with labelled axis on each, and determine if it's too much, too busy, and go from there.
+ 
+```{r subset least skipped dataframe to keep only desired column variables}
+# Subset remove column (-c); do not use quotes around column names in subset.
+# Commented out due to error I could not yet debug; trying a different method instead "Error in -c(not_skipped_pct, track_id_clean, plays, skip_1, skip_2, skip_3, not_skipped, : invalid argument to unary operator"
+#tracks_least_skipped_radar = subset(tracks_least_skipped_features, -c(not_skipped_pct,track_id_clean,plays,skip_1,skip_2,skip_3,not_skipped,dyn_range_mean,mode,acoustic_vector_0,acoustic_vector_1,acoustic_vector_2,acoustic_vector_3,acoustic_vector_4,acoustic_vector_5,acoustic_vector_6,acoustic_vector_7))
+```
+```{r drop least skipped dataframe to keep only desired column variables}
+# Note quotes are required around objects to call columns by name in this format.
+drop <- c("not_skipped_pct","track_id_clean","plays","skip_1","skip_2","skip_3","not_skipped","dyn_range_mean","mode","acoustic_vector_0","acoustic_vector_1","acoustic_vector_2","acoustic_vector_3","acoustic_vector_4","acoustic_vector_5","acoustic_vector_6","acoustic_vector_7")
+tracks_least_skipped_radar = tracks_least_skipped_features[,!(names(tracks_least_skipped_features) %in% drop)]
+```
+  
+```{r glimpse updated radar dataframe}
+glimpse(tracks_least_skipped_radar)
+```
+_*...back to Radar Requirements Checklist*_
+
+3.) First 2 rows provide the min and the max that will be used for each variable.
+
+Let's see, we'll need to determine and assign min and max for each column, either from dataset (more accurately we should use the original range of full training data) or from documentation definitions if available there. 
+
+Found some of these ranges by following link in _Dataset Description_ document (pdf) to https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-audio-features and scroll/find to "AudioFeaturesObject" subheading for each Key field, data type and its range mostly are noted in descriptions.
+
+For others I'm taking the min and max of the raw training dataset to get a range.
+Did a bit more research on some variables like Tempo and Time Signature which generally correlate to one another.
+For a Tempo range, the raw training dataset went as high as over the Prestissimo—extremely fast (more than 200 BPM) basic known top tempo marking, and down to 0, so I chose a range to start as 0 to 220 (Larghissimo—very, very slow, almost droning (20 BPM and below) is the lowest basic tempo marking published at my research source where you can read more: https://www.masterclass.com/articles/music-101-what-is-tempo-how-is-tempo-used-in-music#what-is-casual-musical-language). Note that our graphed dataset of least skipped may not extend well into either end of these ranges derived from the raw dataset, but are an accurate starting point and potential ranges for new values if refreshing analysis also.
+
+Their Time Signature is listed as (meter) therefore it can be understood to represent the beats per measure, e.g. a duple time (2/2, 2/4, etc.) would be listed here as '2'. It's rare to see those below 2 or above 4 (quadruple) which are not an equivalent to one in that range, according to research source Liberty Park Music, but the max in dataset is 5 so we'll use 0 to 5 for our axis scale (source: https://www.libertyparkmusic.com/musical-time-signatures/#:~:text=There%20are%20three%20which%20are,has%20four%20beats%20per%20measure.)
+
+```{r view raw track feautes dataset min}
+apply(track_features,2,min)
+```
+```{r view raw track features dataset max}
+apply(track_features,2,max)
+```
+
 
 
 ```{r}
+# Add 2 lines to least skipped radar dataframe: min and max of each column to show on plot.
 
+# First because we have different ranges, we'll need to specify each in a dataframe of their own.
+# Determined from aproximate min/max in training set: duration, release_year, us_popularity_estimate, key, loudness (backed up by research), mechanism, organism (those 2 were not listed in Spotify docs I found at all), energy, flatness, time_signature
+# Note acoustiness, energy max, instrumentalness in dataset were 9.9... but docs indicate each is a 0.0 to 1.0 scale aligned with other columns; I'll test both for chart effectiveness (likely a data anomoly/error(s) exist outside above 1.0).
+# Switched the erroneous 0 to 10 ranges to the 0 to 1 listed in docs because test proved that none in our dataset appeared away from the center of radar chart at 0. Once I disabled scientific notation, instrumentalness dropped values down below 1.0 in our dataset.
+# Dynamic range also is accounted for as part of energy calculation so if its range is ineffective visually with the others, we could omit that column as its own variable as somewhat redundant.
+# Updated to remove: dyn_range_mean = c(35.0, 0.0).
+# Loudness in max aggregation shows -60 as the max, but as a natural scale I flipped min to that negative end of range whereas 0 became the max (and 0 was min in R aggregate function calculation).
+# However, after testing, I switched loudness back to max as -60 because this allowed the center of radar range point to be 0 for all except the year, which makes for a more congruent view across variables with different range end points.
+max_min <- data.frame(
+  duration = c(2000.0, 0.0), release_year = c(2021, 1950), us_popularity_estimate = c(100.0, 0.0), acousticness = c(1.0, 0.0), beat_strength = c(1.0, 0.0), bounciness =  c(1.0, 0.0), danceability = c(1.0, 0.0), energy = c(1.0, 0.0), flatness = c(1.0, 0.0), instrumentalness = c(1.0, 0.0), key = c(11, 0), liveness = c(1.0, 0.0), loudness = c(-60.0, 0.0), mechanism = c(1.0, 0.0), organism = c(1.0, 0.0), speechiness = c(1.0, 0.0), tempo = c(220.0, 0.0), time_signature = c(5, 0), valence = c(1.0, 0.0)
+)
+rownames(max_min) <- c("Max", "Min")
+# Bind the variable ranges to the data.
+tracks_least_skipped_radar <- rbind(max_min, tracks_least_skipped_radar)
+# Display the dataframe result.
+tracks_least_skipped_radar
+```
+*Plot the Radar Charts of our Least Skipped Tracks*
+
+We'll first show the default chart format, then add some customization.
+Good start, but not quite what will help us undertand its contents easily in this case.
+The default colors are a quantitative selection, which in our cases isn't really as necessary since we already have isolated similarity among our selected tracks based on them being the least often skipped.
+Spotting any overall trends among features is more what we're going for here, and we'll adjust color to simplify this view more to support that goal.
+
+```{r plot tracks_least_skipped_radar default radar chart}
+# FOR ILLUSTRATIVE PURPOSES ONLY! Lots of visual issues with this first try!
+radarchart(tracks_least_skipped_radar)
+```
+```{r add rownames}
+# Add rownames back on for interactivity or if we split this into separate radar charts for each later.
+# This error seems to be because the percents are floats not integers: Error in `.rowNamesDF<-`(x, value = value) : invalid 'row.names' length
+#rownames(tracks_least_skipped_radar) <- paste(tracks_least_skipped_features[,"not_skipped_pct"], "% Skipped")
+```
+The polygon shape can impact how we perceive sameness and different in magnitude on a radar graph, so let's reorder the columns to put same and similar scales in neighborhoods, start at the top with most emphasis--I'll use popularity estimate, which look to all be above 90%.
+```{r adjust columns order}
+# Note fmsb package plots radar in counter clockwise order, so we'll order our vector of column names according to what should appear last (12 o'clock) to 9:00 to 6:00 to 3:00, etc.
+# Updated to remove "dyn_range_mean".
+col_order <- c("us_popularity_estimate", "release_year", "duration", "tempo", "time_signature", "key", "loudness", "acousticness", "beat_strength", "bounciness", "danceability", "energy", "flatness", "instrumentalness", "liveness", "mechanism", "organism", "speechiness", "valence")
+tracks_least_skipped_radar2 <- tracks_least_skipped_radar[, col_order]
+# Show the datatable
+tracks_least_skipped_radar2
 ```
 
+```{r plot tracks_least_skipped_radar customized radar chart}
+# set a color palette variable for some greens that will be understood as a relative group (of the least skipped), and remain somewhat visible as distinct tracks individually also.
+palette_greens <- brewer.pal(8,"Greens")
+# for the fill of polygons, let's add some transparency with alpha
+palette_greens_in <- alpha(palette_greens,0.2)
+
+# Customize the radar chart
+radarchart(tracks_least_skipped_radar2, axistype = 3,
+           #add a title
+           title = "Features of Least Skipped Spotify Tracks",
+           #custom polygon, let's generalize all of these 'good' i.e. least skipped as a similar range of color using a R palette, since we'll compare it to 'bad' most skipped, not among themselves as much
+           pcol = palette_greens, #colors the lines
+           pfcol = palette_greens_in, #adds same colors as fill to polygons
+           
+           #custom the grid
+           cglcol = "grey", cglty = 1, axislabcol = "grey30", cglwd = 0.8,
+           
+           #custom labels
+           vlabels=c("US Popularity est. %", "Release Year", "Duration (ms)", "Tempo", "Time Signature", "Key", "Loudness", "Acousticness", "Beat Strength", "Bounciness", "Danceability", "Energy", "Flatness", "Instrumentalness", "Liveness", "Mechanism", "Organism", "Speechiness", "Valence"),
+           vlcex = 0.75,
+           #plot just a zero in center because all scales share min as 0
+           caxislabels=c("0", "", "", "", "")
+           )
+```
 
 
 ```{r}

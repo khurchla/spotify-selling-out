@@ -1,0 +1,3 @@
+"0","# package object 'ggiteam' is a color standard styling pckg for City of Balt. (see https://rdrr.io/github/city-of-baltimore/ggiteam/src/R/ggiteam.R)"
+"0","#install.packages(""remotes"")"
+"0","#remotes::install_github(""city-of-baltimore/ggiteam"")"
