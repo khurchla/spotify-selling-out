@@ -1,7 +1,7 @@
 ---
 title: "How to Sell Out for Popularity in Music"
 subtitle: "Data Driven Recommendations from Audio Features of Least Skipped Spotify Tracks"
-author: <a href=mailto:justin.elszasz@baltimorecity.gov>justin.elszasz@baltimorecity.gov</a>
+author: <a href=mailto:kmhurchla@gmail.com>kmhurchla@gmail.com</a>
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
   html_notebook:
@@ -28,8 +28,6 @@ h1, .h1  {
     margin-top: 70px;
 }
 ```
-
-<img src=`r "https://images.squarespace-cdn.com/content/5b32397bf79392af6b062048/1578532761811-Y6J7YANV433GI2O8YPXV/OPI_Logo.png?content-type=image%2Fpng"` width="200">
 
 ```{r setup, include = FALSE, echo = FALSE, message = FALSE, cache = FALSE}
 # Disable scientific notation in double numbers, because instrumentalness otherwise did not test plotting accurately (plotted at zero)
