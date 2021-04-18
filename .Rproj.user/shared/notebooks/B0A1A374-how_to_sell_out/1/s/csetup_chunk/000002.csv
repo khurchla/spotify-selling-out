@@ -1,4 +1,5 @@
 "0","# Disable scientific notation in double numbers, because instrumentalness otherwise did not test plotting accurately (plotted at zero)"
+"2","The working directory was changed to /Users/kathrynhurchla/Documents/GitHub/spotify-selling-out inside a notebook chunk. The working directory will be reset when the chunk is finished running. Use the knitr root.dir option in the setup chunk to change the working directory for notebook chunks."
 "0","options(scipen = 999)"
 "0",""
 "0","knitr::opts_chunk$set("
@@ -17,5 +18,6 @@
 "0","  clean = FALSE, "
 "0","  path = knitr::opts_chunk$get(""cache.path"")"
 "0","  )"
+"2","This function must be called inside a source document"
 "1","NULL
 "

@@ -1,3 +1,0 @@
-"0","# Note quotes are required around objects to call columns by name in this format."
-"0","drop <- c(""not_skipped_pct"",""track_id_clean"",""plays"",""skip_1"",""skip_2"",""skip_3"",""not_skipped"",""dyn_range_mean"",""mode"",""acoustic_vector_0"",""acoustic_vector_1"",""acoustic_vector_2"",""acoustic_vector_3"",""acoustic_vector_4"",""acoustic_vector_5"",""acoustic_vector_6"",""acoustic_vector_7"")"
-"0","tracks_least_skipped_radar = tracks_least_skipped_features[,!(names(tracks_least_skipped_features) %in% drop)]"

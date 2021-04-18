@@ -1,0 +1,7 @@
+"0","# Note fmsb package plots radar in counter clockwise order, so we'll order our vector of column names according to what should appear last (12 o'clock) to 9:00 to 6:00 to 3:00, etc."
+"0","# Updated to remove ""dyn_range_mean""."
+"0","col_order <- c(""us_popularity_estimate"", ""release_year"", ""duration"", ""time_signature"", ""tempo"", ""key"", ""loudness"", ""acousticness"", ""beat_strength"", ""bounciness"", ""danceability"", ""liveness"", ""mechanism"", ""organism"", ""energy"", ""flatness"", ""instrumentalness"", ""speechiness"", ""valence"")"
+"0",""
+"0","tracks_least_skipped_radar2 <- tracks_least_skipped_radar[, col_order]"
+"0","# Show the datatable"
+"0","tracks_least_skipped_radar2"

@@ -1,0 +1,7 @@
+"0","p <- track_plays_skips_features %>%"
+"0","  ggplot(aes(x = energy, y = not_skipped_pct)) +"
+"0","  geom_point()"
+"0","# Add an understandable plot title and clean axis labels"
+"0","p + ggtitle(""Percentage of Times each Track was Skipped of its Times Played \n by Energy of Tracks"") +"
+"0","  xlab(""Energy"") + ylab(""Not Skipped %"") +"
+"0","  theme(plot.title = element_text(hjust = 0.5))"

@@ -1,3 +1,0 @@
-"0","# Add rownames back on for interactivity or if we split this into separate radar charts for each later."
-"0","# This error seems to be because the percents are floats not integers: Error in `.rowNamesDF<-`(x, value = value) : invalid 'row.names' length"
-"0","#rownames(tracks_least_skipped_radar) <- paste(tracks_least_skipped_features[,""not_skipped_pct""], ""% Skipped"")"
