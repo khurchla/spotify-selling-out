@@ -8,7 +8,7 @@ View the R Markdown Notebook (.Rmd) or its more pleasing .html version in your b
 
 Work in progress, with this exploratory data analysis leading to an interactive data product which would be presented to convey findings to the musician.
 
-<img src="output/sell-out-music-roadmap.jpg" alt=Roadmap and Storymap of project and data product">
+<img src="img/sell-out-music-roadmap.png" alt=Roadmap and Storymap of project and data product">
 
 Developed as an assignment in MICA Data Analytics & Visualization MPS program course titled _Visual Storytelling_ with professor Justin Elszasz.
 Feel free to submit comments or contribute with improvements to code if you are inclined with the time to do so. Thanks for looking!
