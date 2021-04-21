@@ -78,6 +78,7 @@ library(fmsb)
 #library(viridis)
 library(RColorBrewer)
 library(ggplot2)
+library(stringr)
 ```
 
 # Exploratory Data Analysis notebook
@@ -215,6 +216,15 @@ How far we are from what is required for a radar chart?
 # Let's check data types.
 glimpse(tracks_least_skipped_features)
 ```
+Let's get a list of just the track_id_clean for the least skipped tracks.
+```{r least-skipped-track-ids}
+tracks_least_skipped_ids <- tracks_least_skipped_features$track_id_clean
+tracks_least_skipped_ids
+
+```
+
+
+
 **2. Again, each column is a quantitative variable:** _Non-quantitative or columns unnecessary for this chart will be removed:_
 
 *  $ not_skipped_pct 
@@ -472,6 +482,25 @@ Spotify users show trends of preferences toward playing songs through entirety w
 _Limitations:_ The most skipped (head by % not skipped of played) and bottom (tail of same) are illustrative for comparing patterns in differences of song features, but may not indicate statistically significant findings.
 
 A categorical or neighborhood model could further assess these findings with a confidence level.
+
+
+### List of Least Skipped Tracks
+
+This could be modified and used as input for a Spotify Web Play to provide a listening experience to our musician.
+```{r tracks_least_skipped_ids}
+# Make a dataframe of the ids from the tail of the tracks sorted by least skipped percentage (of total times played)
+tracks_least_skipped_ids <- data.frame(tracks_least_skipped_ids)
+tracks_least_skipped_ids
+
+```
+```{r remove-track-suffix}
+# Remove first two characters from character value column
+# We want to remove the "t_" or first two characters in each value of track_id_clean; possibly replace them with "spotify:track" per this solution for the web API to identify each track: 
+# spotify:track
+# We can may be able to use stringr package, but it didn't work as anticipated the first go, so we'll have to come back to this.
+
+```
+
 
 ### Data & Cited Sources
 
