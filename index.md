@@ -1,37 +1,32 @@
-## Welcome to GitHub Pages
+# Sell Out Music Listener
+An academic project to build an app for a musician to learn things about music that they can jump off of to become a pop star. 
 
-You can use the [editor on GitHub](https://github.com/khurchla/spotify-selling-out/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+_Seriously, though, be yourself. Make music that moves you. This is for fun and learning._
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## What does popular music _look_ like?
 
-### Markdown
+This project aims to visualize Spotify data to _see_ just that, what features might be common among popular music in very different genres?
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## What does popular music _sound_ like?
 
-```markdown
-Syntax highlighted code block
+More essentially for our intended musician audience, and perhaps less uniquely a representation of music, secondary aim is to **sonify** popular music--Spotify audio tracks--to _hear_ the same commonalities among popular music.
 
-# Header 1
-## Header 2
-### Header 3
 
-- Bulleted
-- List
+### Sounds fun, pun intended! Sign me up.
 
-1. Numbered
-2. List
+...just getting started, check back for more, or dig into the [GitHub Repository](https://github.com/khurchla/spotify-selling-out) and project board, and consider building with me.
 
-**Bold** and _Italic_ and `Code` text
+[Define sonify.](https://www.google.com/search?q=define+sonify)
 
-[Link](url) and ![Image](src)
-```
+### Contact or Contribute
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+[Probably email me](mailto:kmhurchla@gmail.com) and say hi. I can add folks as contributors to the repository, and hey I'm curious what's one post-it note on your desk you can tell me about? (This is about you, with no necessity to be related to this project, like take my idiosyncracies for example, below).
 
-### Jekyll Themes
+I've got posted beside my computer:
+"Correlation is valued between -1 > 0 > 1 (Zero is no correlation.)" _Seriously, I love|hate statistics._
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/khurchla/spotify-selling-out/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+And: "Option + Shift + K"
 
-### Support or Contact
+Also: "MAGI" and "LTV" and some other financial stats I constantly have to remember what exactly each stands for and why I should care...
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+There's also a matchbox car.
