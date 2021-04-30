@@ -1,5 +1,0 @@
-"0","# Remove first two characters from character value column"
-"0","# We can use stringr package, but looks like we need to parse out the values first. We'll have to come back to this."
-"0","#tracks_least_skipped_ids <- str_sub(tracks_least_skipped_ids, 3)"
-"0","#tracks_least_skipped_ids"
-"0",""
