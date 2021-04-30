@@ -1,2 +1,0 @@
-"0","# Restore the standard par() settings"
-"0","par <- par(opar) "
