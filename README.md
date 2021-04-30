@@ -8,7 +8,9 @@ To see my analysis, view the R Markdown Notebook (.Rmd) or its more pleasing .ht
 <img src="img/side-by-side-radar-charts.png" alt="Compare Least and Most Skipped Songs by Features">
 
 
-You can also run the Shiny app (Sell-Out-Music-Listener/app.R) where I am working to build interactivity into the radar chart. 
+You can also view the Shiny app deployed publicly at [Sell Out Music Listener](https://data-design-dimension.shinyapps.io/Sell-Out-Music-Listener/
+https://data-design-dimension.shinyapps.io/Sell-Out-Music-Listener/), or if you'd like to run the app R script yourself with the file (Sell-Out-Music-Listener/app.R)
+!I am working to build interactivity into the radar chart.! So as of publishing this update it's still buggy.
 I've converted it to ggplot2 ggradar syntax in Shiny app interface, and am exploring using other packages and extensions for interactivity.
 Here in this app, I would also like to embed a Spotify web player to allow the musician to hear a playlist of recommendations/like songs generated with the least skipped tracks as input seeds.
 

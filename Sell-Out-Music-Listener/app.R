@@ -20,6 +20,8 @@ options(scipen = 999) # This worked well in our EDA notebook but does not seem t
 # Load packages
 # Note quotes used in install of some packages below, becuase those otherwise would error and cannot be found and in RStudio packages list
 library(shiny)
+#install.packages("plotly")
+library(plotly)
 #library(ggplot2)
 # ggradar works on ggplot2 to make a radar chart
 #devtools::install_github("ricardo-bion/ggradar")
@@ -55,7 +57,7 @@ library(magrittr)
 # We'll use only plotted subset of the data set and columns
 # so that it prints nicely
 # Load data from .csv files.
-track_features <- read_csv("../data/raw/track_features/tf_mini.csv")
+track_features <- read_csv("tf_mini.csv")
 # For debugging, test load was successful.
 track_features
 
@@ -63,7 +65,7 @@ track_features
 #track_features = format(track_features,scientific=FALSE)
 #track_features
 
-skips <- read_csv("../data/raw/training_set/log_mini.csv")
+skips <- read_csv("log_mini.csv")
 # counts of number of times each track (by ID) appears in training dataset and sort table by counts descending
 skips %>%
   count(track_id_clean) %>%
@@ -185,7 +187,8 @@ ui <- fluidPage(titlePanel("Sell Out Music Listener"),
   
   fluidRow(
     column(width = 4,
-           plotOutput("plot1", height = 300,
+           # updated plotOutput to plotlyOutput
+           plotlyOutput("plot1", height = 300,
                       # Equivalent to: click = clickOpts(id = "plot_click")
                       click = "plot1_click",
                       brush = brushOpts(
@@ -209,7 +212,8 @@ ui <- fluidPage(titlePanel("Sell Out Music Listener"),
 # We are not getting interactive points, and need to research ggiraph, ggiraphExtra, girafe.
 
 server <- function(input, output) {
-  output$plot1 <- renderPlot({
+  # renderPlot updated to renderPlotly
+  output$plot1 <- renderPlotly({
     # First we will get the least skipped working in ggradar, and then we may return to plot the comparison most skipped beside it
     # Now we will plot the least and most skipped charts beside one another for comparison.
     #opar <- par()
@@ -218,40 +222,41 @@ server <- function(input, output) {
     #par(mfrow = c(1,2)) # 1 row, 2 columns
     # Produce a radar-chart for each desired plot again, least skipped at left; most to right
     # Customized least skipped radar chart
-    ggradar(
-      tracks_least_skipped_radar2,
-      # Add a plot title.
-      plot.title = "Features: Least Skipped Songs",
-      # Custom labels (removed for now any audio feature columns not on 0-1 scale: "US Popularity est. %", "Release Year", "Duration (ms)", "Time Signature", "Tempo", "Key", "Loudness", )
-      # Omit "instrumentalness" for now because column was removed due to unsuccessful scientific notation troubleshooting.
-      axis.labels = c("Acousticness", "Beat Strength", "Bounciness", "Danceability", "Liveness", "Mechanism", "Organism", "Energy", "Flatness", "Speechiness", "Valence"),
-      axis.label.size = 3.5,
-      # We could offset the axis labels further away from the max circle if they appear crowded, measured relative to circle diameter.
-      #axis.label.offset = 2 # We'll test the default 1.15 first.
-      # Note ggradar does not appear to have an axis color option, as we used "grey30" in fmsb (i.e. axislabcol = "grey30").
-      values.radar = c("0", "0.5", "1"),
-      # Grid line values (3 lines drawn)
-      grid.min = 0, grid.mid = 0.5, grid.max = 1,
-      # Polygons
-      group.line.width = 0.8,
-      group.point.size = 3,
-      # Colors the lines of the polygon(s), let's generalize all of these 'good' i.e. least skipped as a similar range of color using a R palette, since we'll compare it to 'bad' most skipped, not among themselves as much.
-      group.colours = palette_greens,
-      # Adds same colors as fill to polygons with more transparency (not clear yet how to convert this from fmsb to ggradar).
-      #pfcol = palette_greens_in, 
-      # Background and grid lines (types and colors)
-      background.circle.colour = "white", # Note, default is yellow in ggradar.
-      grid.line.width = 0.8,
-      gridline.min.linetype = "solid",
-      gridline.mid.linetype = "solid",
-      gridline.max.linetype = "solid", # Note, default is long dashed line in ggradar.
-      # Note the min and max lines' color defaults are grey so we don't have to state them.
-      gridline.mid.colour = "grey", # Default for the mid point line is blue, which I would find distracting in this case.
-      # No legend desired.
-      plot.legend = FALSE
-      # Legend position (probably don't want a legend showing Track ID; we're concerned with these as a visual group of least skipped with some variation.)
-      #legend.position = "bottom"
-    )
+    g <-  ggradar(
+          tracks_least_skipped_radar2,
+          # Add a plot title.
+          plot.title = "Features: Least Skipped Songs",
+          # Custom labels (removed for now any audio feature columns not on 0-1 scale: "US Popularity est. %", "Release Year", "Duration (ms)", "Time Signature", "Tempo", "Key", "Loudness", )
+          # Omit "instrumentalness" for now because column was removed due to unsuccessful scientific notation troubleshooting.
+          axis.labels = c("Acousticness", "Beat Strength", "Bounciness", "Danceability", "Liveness", "Mechanism", "Organism", "Energy", "Flatness", "Speechiness", "Valence"),
+          axis.label.size = 3.5,
+          # We could offset the axis labels further away from the max circle if they appear crowded, measured relative to circle diameter.
+          #axis.label.offset = 2 # We'll test the default 1.15 first.
+          # Note ggradar does not appear to have an axis color option, as we used "grey30" in fmsb (i.e. axislabcol = "grey30").
+          values.radar = c("0", "0.5", "1"),
+          # Grid line values (3 lines drawn)
+          grid.min = 0, grid.mid = 0.5, grid.max = 1,
+          # Polygons
+          group.line.width = 0.8,
+          group.point.size = 3,
+          # Colors the lines of the polygon(s), let's generalize all of these 'good' i.e. least skipped as a similar range of color using a R palette, since we'll compare it to 'bad' most skipped, not among themselves as much.
+          group.colours = palette_greens,
+          # Adds same colors as fill to polygons with more transparency (not clear yet how to convert this from fmsb to ggradar).
+          #pfcol = palette_greens_in, 
+          # Background and grid lines (types and colors)
+          background.circle.colour = "white", # Note, default is yellow in ggradar.
+          grid.line.width = 0.8,
+          gridline.min.linetype = "solid",
+          gridline.mid.linetype = "solid",
+          gridline.max.linetype = "solid", # Note, default is long dashed line in ggradar.
+          # Note the min and max lines' color defaults are grey so we don't have to state them.
+          gridline.mid.colour = "grey", # Default for the mid point line is blue, which I would find distracting in this case.
+          # No legend desired.
+          plot.legend = FALSE
+          # Legend position (probably don't want a legend showing Track ID; we're concerned with these as a visual group of least skipped with some variation.)
+          #legend.position = "bottom"
+          )
+    plotly(g)
     
     
     # Customized most skipped radar chart

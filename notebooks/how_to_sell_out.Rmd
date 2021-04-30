@@ -1,7 +1,6 @@
 ---
 title: "How to Sell Out for Popularity in Music"
-subtitle: "Data Driven Recommendations for Making Songs to Limit Spotify Skips"
-author: <a href=mailto:kmhurchla@gmail.com>kmhurchla@gmail.com</a>
+author: "<a href=mailto:kmhurchla@gmail.com>kmhurchla@gmail.com</a>"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
   html_notebook:
@@ -10,8 +9,13 @@ output:
     fig_width: 6
     toc: yes
     toc_depth: 2
-    toc_float: true
-editor_options: 
+    toc_float: yes
+  html_document:
+    toc: yes
+    toc_depth: '2'
+    df_print: paged
+subtitle: Data Driven Recommendations for Making Songs to Limit Spotify Skips
+editor_options:
   chunk_output_type: inline
 ---
 
@@ -486,7 +490,11 @@ A categorical or neighborhood model could further assess these findings with a c
 
 ### List of Least Skipped Tracks
 
-This could be modified and used as input for a Spotify Web Play to provide a listening experience to our musician.
+This could be modified and used as input for a Spotify Web Play to provide a listening experience to our musician, however I've updated the storyboard/roadmap below to indicate this would require using our own Spotify user data to compare track features, because after testing I confirmed this CSV training dataset contains anonymized track ID's that do not meet the 22 character format and do not match actual tracks on Spotify. 
+
+### Planning Next Steps
+A Story board / roadmap was made for this project called _Sell Out Music Roadmap_ board was made in miro where you can also view it interactively https://miro.com/app/board/o9J_lJXf6B0=/
+
 ```{r tracks_least_skipped_ids}
 # Make a dataframe of the ids from the tail of the tracks sorted by least skipped percentage (of total times played)
 tracks_least_skipped_ids <- data.frame(tracks_least_skipped_ids)
@@ -497,16 +505,25 @@ tracks_least_skipped_ids
 # Remove first two characters from character value column
 # We want to remove the "t_" or first two characters in each value of track_id_clean; possibly replace them with "spotify:track" per this solution for the web API to identify each track: 
 # spotify:track
-# We can may be able to use stringr package, but it didn't work as anticipated the first go, so we'll have to come back to this.
+# We may be able to use stringr package, but it didn't work as anticipated the first go, so we'll have to come back to this.
 
 ```
+
+
+## Link to the Sell Out Music Listener app
+
+Jump over to the deployed app being made in Shiny https://data-design-dimension.shinyapps.io/Sell-Out-Music-Listener/
+If you happen to catch it reading "Disconnected from server", let me know on Slack or <a href=mailto:kmhurchla@gmail.com>email me at kmhurchla@gmail.com</a> and I'll wake it up for you! All this building and debugging, it gets sleepy sometimes!
+
 
 
 ### Data & Cited Sources
 
 Sample data contains over 300 unique tracks each played 50 times or more as analyzed in this notebook, of the _Training_Set_And_Track_Features_Mini (17.2 MB)_ from AI Crowd Spotify Sequential Skip Prediction Challenge By Spotify, which sponsored the AI Crowd challenge (https://www.spotify.com/).
 
-**Data source(s):** https://aicrowd-production.s3.eu-central-1.amazonaws.com/dataset_files/challenge_204/16772e7f-7871-4d42-a44f-5f399f40fd94_training_set_track_features_mini.tar.gz?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJ6IZH6GWKDCCDFAQ%2F20210415%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20210415T034213Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=8f355b250186ffef249ff042a138717684a8aace6732c6804ade55e22ce21a7d
+**Data source(s):** https://www.aicrowd.com/challenges/spotify-sequential-skip-prediction-challenge/dataset_files
+Training_Set_And_Track_Features_Mini 17.2 MB
+Minimally sized version of training set and track features for familiarizing yourself with dataset on aicrowd Spotify Sequential Skip Prediction Challenge
 
 **Image source(s):** 
 Spotify Icon: <a href="https://iconscout.com/icons/spotify" target="_blank">Spotify Icon</a> by <a href="https://iconscout.com/contributors/Hopstarter" target="_blank">Jojo Mendoza</a>
