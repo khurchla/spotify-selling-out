@@ -1,3 +1,0 @@
-"0","# Subset remove column (-c); do not use quotes around column names in subset."
-"0","# Commented out due to error I could not yet debug; trying a different method instead ""Error in -c(not_skipped_pct, track_id_clean, plays, skip_1, skip_2, skip_3, not_skipped, : invalid argument to unary operator"""
-"0","#tracks_least_skipped_radar = subset(tracks_least_skipped_features, -c(not_skipped_pct,track_id_clean,plays,skip_1,skip_2,skip_3,not_skipped,dyn_range_mean,mode,acoustic_vector_0,acoustic_vector_1,acoustic_vector_2,acoustic_vector_3,acoustic_vector_4,acoustic_vector_5,acoustic_vector_6,acoustic_vector_7))"
